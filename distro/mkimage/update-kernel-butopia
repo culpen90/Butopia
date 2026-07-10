@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+# Patch the pinned Alpine helper in a disposable copy. This preserves all of
+# Alpine's kernel selection, firmware filtering, initramfs creation, and
+# modloop signing behavior while changing only the SquashFS compressor.
+upstream=/usr/sbin/update-kernel
+patched=$(mktemp "${TMPDIR:-/tmp}/butopia-update-kernel.XXXXXX")
+trap 'rm -f "$patched"' EXIT INT TERM
+
+sed 's/-comp xz -exit-on-error \$mksfs/-comp zstd -Xcompression-level 5 -exit-on-error/' \
+	"$upstream" >"$patched"
+chmod 0755 "$patched"
+
+if ! grep -q -- '-comp zstd -Xcompression-level 5' "$patched"; then
+	echo "Unable to apply Butopia modloop compression policy." >&2
+	exit 1
+fi
+
+sh "$patched" "$@"

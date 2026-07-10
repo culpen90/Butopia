@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Home
+Comment=Open the Butopia live user's files
+Exec=thunar /home/butopia
+Icon=user-home
+Terminal=false
+Categories=System;FileTools;FileManager;

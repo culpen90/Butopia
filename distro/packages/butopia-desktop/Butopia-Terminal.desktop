@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Butopia Terminal
+Comment=Open a command line
+Exec=xfce4-terminal
+Icon=org.xfce.terminal
+Terminal=false
+Categories=System;TerminalEmulator;

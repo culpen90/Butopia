@@ -1,0 +1,11 @@
+.build/
+.cache/
+.DS_Store
+dist/*
+!dist/.gitkeep
+*.log
+__pycache__/
+*.pyc
+distro/packages/*/pkg/
+distro/packages/*/src/
+distro/packages/*/*.apk

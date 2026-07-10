@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Install Butopia
+Comment=Install Butopia to a disk
+Exec=pkexec /sbin/setup-butopia
+Icon=drive-harddisk
+Terminal=false
+Categories=System;

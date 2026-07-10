@@ -1,0 +1,25 @@
+FROM alpine:3.24.1
+
+RUN apk add --no-cache \
+      alpine-conf \
+      alpine-sdk \
+      coreutils \
+      findutils \
+      git \
+      grub \
+      mtools \
+      openssl \
+      rsync \
+      squashfs-tools \
+      su-exec \
+      syslinux \
+      xorriso \
+    && adduser -D -h /home/builder builder \
+    && addgroup builder abuild \
+    && printf 'builder ALL=(ALL) NOPASSWD: ALL\n' >/etc/sudoers.d/builder \
+    && chmod 0440 /etc/sudoers.d/builder
+
+COPY builder/container-entrypoint.sh /usr/local/bin/butopia-container-build
+RUN chmod 0755 /usr/local/bin/butopia-container-build
+
+ENTRYPOINT ["/usr/local/bin/butopia-container-build"]

@@ -1,0 +1,11 @@
+NAME="Butopia Linux"
+ID=butopia
+ID_LIKE=alpine
+VERSION="0.1.0 (Genesis)"
+VERSION_ID=0.1.0
+VERSION_CODENAME=genesis
+PRETTY_NAME="Butopia Linux 0.1.0 (Genesis)"
+VARIANT="Live and install image"
+VARIANT_ID=live
+ALPINE_VERSION=3.24.1
+DOCUMENTATION_URL="file:///usr/share/doc/butopia/README"

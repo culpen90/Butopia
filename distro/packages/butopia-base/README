@@ -1,0 +1,5 @@
+Butopia Linux 0.1.0 (Genesis)
+
+Run `butopia help` for local commands, use `apk` for packages, and run
+`setup-butopia` to begin an installation. Butopia is Alpine-compatible and
+identifies that relationship through ID_LIKE=alpine.

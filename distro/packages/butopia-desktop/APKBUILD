@@ -1,0 +1,133 @@
+# Maintainer: Butopia Contributors <maintainers@butopia.invalid>
+pkgname=butopia-desktop
+pkgver=0.1.0
+pkgrel=0
+pkgdesc="Butopia graphical live desktop, branding, and session defaults"
+url="https://github.com/culpen90/Butopia"
+arch="noarch"
+license="MIT"
+depends="
+	adwaita-xfce-icon-theme
+	adw-gtk3
+	butopia-base
+	dbus
+	dbus-openrc
+	dbus-x11
+	elogind
+	elogind-openrc
+	eudev
+	eudev-openrc
+	firefox-esr
+	font-dejavu
+	font-noto
+	font-noto-emoji
+	gvfs
+	gvfs-smb
+	lightdm
+	lightdm-gtk-greeter
+	lightdm-openrc
+	mesa-dri-gallium
+	mesa-egl
+	mousepad
+	network-manager-applet
+	networkmanager
+	networkmanager-openrc
+	networkmanager-wifi
+	polkit-elogind
+	ristretto
+	thunar-volman
+	udev-init-scripts
+	udev-init-scripts-openrc
+	udisks2
+	xf86-input-libinput
+	xf86-video-amdgpu
+	xf86-video-ati
+	xf86-video-intel
+	xf86-video-nouveau
+	xf86-video-vesa
+	xfce-polkit
+	xfce4
+	xfce4-power-manager
+	xfce4-screensaver
+	xfce4-screenshooter
+	xfce4-terminal
+	xfce4-whiskermenu-plugin
+	xinit
+	xorg-server
+	yad
+	"
+options="!check"
+install="$pkgname.pre-install $pkgname.post-install"
+source="
+	Butopia-Firefox.desktop
+	Butopia-Home.desktop
+	Butopia-Install.desktop
+	Butopia-Terminal.desktop
+	Butopia-Welcome-Launcher.desktop
+	butopia-desktop-init
+	butopia-desktop-init.desktop
+	butopia-genesis.png
+	butopia-gui-ready.initd
+	butopia-welcome
+	butopia-welcome.desktop
+	butopia.svg
+	lightdm-butopia.conf
+	lightdm-gtk-greeter-butopia.conf
+	xfce4-desktop.xml
+	xsettings.xml
+	"
+
+package() {
+	install -Dm0644 "$srcdir/butopia-genesis.png" \
+		"$pkgdir/usr/share/backgrounds/butopia/butopia-genesis.png"
+	install -Dm0644 "$srcdir/butopia.svg" \
+		"$pkgdir/usr/share/icons/hicolor/scalable/apps/butopia.svg"
+
+	install -Dm0755 "$srcdir/butopia-welcome" "$pkgdir/usr/bin/butopia-welcome"
+	install -Dm0755 "$srcdir/butopia-desktop-init" "$pkgdir/usr/bin/butopia-desktop-init"
+	install -Dm0755 "$srcdir/butopia-gui-ready.initd" \
+		"$pkgdir/etc/init.d/butopia-gui-ready"
+
+	install -Dm0644 "$srcdir/lightdm-butopia.conf" \
+		"$pkgdir/etc/lightdm/lightdm.conf.d/50-butopia.conf"
+	install -Dm0644 "$srcdir/lightdm-gtk-greeter-butopia.conf" \
+		"$pkgdir/etc/lightdm/lightdm-gtk-greeter.conf.d/50-butopia.conf"
+	install -Dm0644 "$srcdir/butopia-desktop-init.desktop" \
+		"$pkgdir/etc/xdg/autostart/butopia-desktop-init.desktop"
+	install -Dm0644 "$srcdir/butopia-welcome.desktop" \
+		"$pkgdir/etc/xdg/autostart/butopia-welcome.desktop"
+
+	config_dir="$pkgdir/usr/share/butopia/skel/.config/xfce4/xfconf/xfce-perchannel-xml"
+	install -Dm0644 "$srcdir/xfce4-desktop.xml" "$config_dir/xfce4-desktop.xml"
+	install -Dm0644 "$srcdir/xsettings.xml" "$config_dir/xsettings.xml"
+
+	desktop_dir="$pkgdir/usr/share/butopia/skel/Desktop"
+	for launcher in \
+		Butopia-Firefox.desktop \
+		Butopia-Home.desktop \
+		Butopia-Install.desktop \
+		Butopia-Terminal.desktop \
+		Butopia-Welcome-Launcher.desktop; do
+		target=$launcher
+		test "$launcher" != Butopia-Welcome-Launcher.desktop || target=Butopia-Welcome.desktop
+		install -Dm0755 "$srcdir/$launcher" "$desktop_dir/$target"
+	done
+}
+
+sha512sums="
+95ede3e7a7bec9ac5a325f2b278f601a4cc64041876fe026ca6ea2a4d00335b4646ea75eb4e7f44c342926e1abc809bed8f6814718aaf5d1d2247d47329a85e4  Butopia-Firefox.desktop
+6521c4baf2588ab9bf3a9c84a42101914b1cc91832a212a5afe4bd9aaa91797a3c3ccc762965680f9dc66aaddb72fcdfeaa682795184bb44a599735be9cc6f78  Butopia-Home.desktop
+c78139809b086051bf92e8e2e4f3aa702b821e51172210b7f387593159136007dcbac5ff965c4b30885a56e99dc9980894fc99cb2c110edd257381ab2eac746d  Butopia-Install.desktop
+4a30ca645209cc623315a8f169f26f18679aab91a8de50841249360d848134f3537b7b982da4fdde9f7c74201b4ced0b5ddfcc1bea685e34ec06879252e306da  Butopia-Terminal.desktop
+ae5cdaf2bed0ab927a4e1195b94faabd4035aebee6787b2a9db1c38203b01b276f59ff45d9679f3e1d22947331b39706845f92b4784e8411f64fd853b2a22967  Butopia-Welcome-Launcher.desktop
+9f114d1b074a76e72528e02cfdf8a0e918a129c9b88c4fa8d60cd4ddd00666fd7ad0149800f9b8c9b1409788d4d90b305488d68a7b8069e0d4d0a40898c061fa  butopia-desktop-init
+19231aafe3e78ea1ebc3bc036f902f778e88b54ed7f4d558478d832c5f79497663844d37abab5f40af0ec0396d8e06a15719c37c8923ea876547ed137793c903  butopia-desktop-init.desktop
+9b30a635a2a0bbc4ccdc923ddacc8c1876cf477bdb97cffc79eb749a71fb63c9d802ed7a0fc2351770a6427864d27064250b0910d0170f7989fbe7de5c048fc4  butopia-genesis.png
+a94c84c680420bd445d463a63d2bba23322ae4eb2fee3ec4e00f5ac506e0fe134ac87d5081ab73fcef40f6eb85238b57852778510e563a05563c89afd59f792f  butopia-gui-ready.initd
+60138e8a217766782e64685f8fb7513ab8b13d1dfc480bebb04bfab61896368011b6d26ad9d5bfcf845943f88f7fc95ef0f7943ea45c35181602aea81ae26332  butopia-welcome
+ae5cdaf2bed0ab927a4e1195b94faabd4035aebee6787b2a9db1c38203b01b276f59ff45d9679f3e1d22947331b39706845f92b4784e8411f64fd853b2a22967  butopia-welcome.desktop
+2f61c14ff1b3450193e0fa5acc4b541ef99daf7656fbcd2331c81ba5c6ad87001d87946577cd12da6af8da80ae6082f4953a741ad6864b91a3960c4d932550a3  butopia.svg
+203cbee8fc49daabe8da392098246c6eb6273424727058ca11eeb3057934109dd35ab784f7a60c281f5650d1a22be21060dc51e94f504d9e0bab2d02053c1baa  lightdm-butopia.conf
+f4c8d09bc2af641b905568abd9267be3f58412d5474c48a9fff311c7fc0bf8fd5a83c5036747c249416d8ce90b6a584c675a616afa4ce5f87c94a800375cf435  lightdm-gtk-greeter-butopia.conf
+c6ef722cf41cab8c41a5d2e13e454e97bd07f7dded7586884aa06fa33d50acec19dea5df33d004f786ffe335d06da47b5bbbaa68970ef183f3b693b285729ca8  xfce4-desktop.xml
+baf88b4710d554e6c70decd56d538c6e3a5fbd67c5bdf141c8e375422689fa14fc55d3e7c8ea7078febe818dd1dbf8df792d761e6fa29e86d8a7bdf7565448b0  xsettings.xml"

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Butopia desktop setup
+Comment=Apply Butopia's live desktop defaults
+Exec=butopia-desktop-init
+OnlyShowIn=XFCE;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

@@ -1,0 +1,40 @@
+minimumLimaVersion: 2.1.0
+
+vmType: qemu
+arch: x86_64
+cpus: 2
+memory: 4GiB
+disk: 30GiB
+
+images:
+  - location: https://dl-cdn.alpinelinux.org/alpine/v3.24/releases/cloud/generic_alpine-3.24.1-x86_64-uefi-cloudinit-r0.qcow2
+    arch: x86_64
+    digest: sha512:ed976ef40de1f73adcb0a3b253ec9e73e43c408208fcc3c30dcdf7a69b91a387a4777f88c6b72345123edf3832d7cb49403ecce28ec84d496d4b3bad6fbd0923
+
+mounts: []
+
+containerd:
+  system: false
+  user: false
+
+provision:
+  - mode: system
+    script: |
+      set -eux
+      apk update
+      apk add --no-cache \
+        alpine-conf \
+        alpine-sdk \
+        coreutils \
+        findutils \
+        git \
+        grub \
+        mtools \
+        openssl \
+        rsync \
+        squashfs-tools \
+        syslinux \
+        xorriso
+      for user in $(awk -F: '$3 >= 500 && $3 < 65534 { print $1 }' /etc/passwd); do
+        addgroup "$user" abuild 2>/dev/null || true
+      done

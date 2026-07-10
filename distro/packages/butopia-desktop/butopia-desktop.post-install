@@ -1,0 +1,7 @@
+#!/bin/sh
+
+install -d -o butopia -g butopia /home/butopia
+cp -a /usr/share/butopia/skel/. /home/butopia/
+chown -R butopia:butopia /home/butopia
+
+exit 0

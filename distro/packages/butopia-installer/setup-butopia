@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+show_help() {
+	cat <<'EOF'
+Usage: setup-butopia [setup-alpine options]
+
+Configure and install Butopia using the Alpine-compatible system installer.
+You will choose networking, users, repositories, and a target disk. Installing
+to a disk can erase its existing data; read every prompt before confirming.
+EOF
+}
+
+case "${1:-}" in
+	-h|--help)
+		show_help
+		exit 0
+		;;
+esac
+
+if test "$(id -u)" -ne 0; then
+	echo "setup-butopia must be run as root." >&2
+	exit 1
+fi
+
+if ! test -r /etc/os-release || ! grep -qx 'ID=butopia' /etc/os-release; then
+	echo "setup-butopia can only install from a Butopia environment." >&2
+	exit 1
+fi
+
+if ! command -v setup-alpine >/dev/null 2>&1; then
+	echo "The Alpine-compatible installer is not available." >&2
+	exit 1
+fi
+
+cat <<'EOF'
+Butopia installer
+------------------
+The following guided installer can repartition and erase disks. Verify the
+target disk carefully. Press Ctrl-C at any prompt to leave disks unchanged.
+
+EOF
+
+exec setup-alpine "$@"

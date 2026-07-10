@@ -1,0 +1,19 @@
+# Maintainer: Butopia Contributors <maintainers@butopia.invalid>
+pkgname=butopia-installer
+pkgver=0.1.0
+pkgrel=0
+pkgdesc="Butopia disk installation entry point"
+url="https://github.com/culpen90/Butopia"
+arch="noarch"
+license="MIT"
+depends="alpine-conf butopia-base"
+options="!check"
+source="setup-butopia"
+
+package() {
+	install -Dm0755 "$srcdir/setup-butopia" "$pkgdir/sbin/setup-butopia"
+	ln -s setup-butopia "$pkgdir/sbin/butopia-install"
+}
+
+sha512sums="
+2d16c17f4f271c4c3f648ec72d023d94c80654209822945e6d62516f963639ae69eae3d48f3100b9d9cf2dc8a307823fd93c8fab3c51739a11976577bc60a683  setup-butopia"

@@ -1,0 +1,65 @@
+#!/bin/sh
+set -eu
+
+show_help() {
+	cat <<'EOF'
+Butopia command center
+
+Usage: butopia COMMAND
+
+Commands:
+  help       Show this guide
+  info       Show release, kernel, memory, disk, and package information
+  network    Show addresses, routes, and DNS configuration
+  version    Print the Butopia release version
+
+Package management uses apk. Install Butopia to disk with setup-butopia.
+EOF
+}
+
+show_version() {
+	if test -r /etc/butopia-release; then
+		printf 'Butopia Linux %s\n' "$(cat /etc/butopia-release)"
+	else
+		printf 'Butopia Linux (unknown version)\n'
+	fi
+}
+
+show_info() {
+	. /etc/os-release
+	printf '%-12s %s\n' 'System:' "$PRETTY_NAME"
+	printf '%-12s %s\n' 'Kernel:' "$(uname -sr)"
+	printf '%-12s %s\n' 'Machine:' "$(uname -m)"
+	printf '%-12s %s\n' 'Hostname:' "$(hostname)"
+	printf '%-12s %s\n' 'Uptime:' "$(uptime | sed 's/^[[:space:]]*//')"
+	printf '%-12s %s\n' 'APK:' "$(apk --version | head -1)"
+	printf '\nMemory:\n'
+	free -h
+	printf '\nRoot filesystem:\n'
+	df -h /
+}
+
+show_network() {
+	printf 'Addresses:\n'
+	ip -brief address 2>/dev/null || ip address
+	printf '\nRoutes:\n'
+	ip route
+	printf '\nResolvers:\n'
+	if test -s /etc/resolv.conf; then
+		cat /etc/resolv.conf
+	else
+		printf '(none configured)\n'
+	fi
+}
+
+case "${1:-help}" in
+	help|-h|--help) show_help ;;
+	info) show_info ;;
+	network) show_network ;;
+	version|-V|--version) show_version ;;
+	*)
+		printf 'Unknown Butopia command: %s\n\n' "$1" >&2
+		show_help >&2
+		exit 2
+		;;
+esac

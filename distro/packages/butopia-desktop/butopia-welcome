@@ -1,0 +1,31 @@
+#!/bin/sh
+
+test -n "${DISPLAY:-}" || exit 0
+
+set +e
+yad \
+	--title="Welcome to Butopia" \
+	--window-icon=butopia \
+	--image=/usr/share/icons/hicolor/scalable/apps/butopia.svg \
+	--image-on-top \
+	--center \
+	--width=640 \
+	--height=430 \
+	--borders=28 \
+	--text='<span size="xx-large" weight="bold">Welcome to Butopia</span>\n\n<span size="large">Genesis 0.1 is a complete live Linux desktop.</span>\n\nBrowse the web, manage files, open a terminal, explore settings, or install Butopia to a disk. The live desktop runs from memory; changes disappear after shutdown unless you install or configure persistence.' \
+	--button="Files":2 \
+	--button="Web":3 \
+	--button="Terminal":4 \
+	--button="Install Butopia":5 \
+	--button="Close":0
+result=$?
+set -e
+
+case "$result" in
+	2) thunar >/dev/null 2>&1 & ;;
+	3) firefox-esr >/dev/null 2>&1 & ;;
+	4) xfce4-terminal >/dev/null 2>&1 & ;;
+	5) pkexec /sbin/setup-butopia >/dev/null 2>&1 & ;;
+esac
+
+exit 0

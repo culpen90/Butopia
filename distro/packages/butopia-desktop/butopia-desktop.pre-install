@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if ! getent group butopia >/dev/null 2>&1; then
+	addgroup -g 1000 butopia
+fi
+
+if ! getent passwd butopia >/dev/null 2>&1; then
+	adduser -D -u 1000 -h /home/butopia -s /bin/bash -G butopia \
+		-g "Butopia Live User" butopia
+fi
+
+for group in audio input netdev plugdev video wheel; do
+	getent group "$group" >/dev/null 2>&1 || addgroup -S "$group"
+	addgroup butopia "$group" 2>/dev/null || true
+done
+
+exit 0

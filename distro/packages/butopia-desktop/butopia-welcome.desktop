@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Welcome to Butopia
+Comment=Learn what is available in the live desktop
+Exec=butopia-welcome
+Icon=butopia
+Terminal=false

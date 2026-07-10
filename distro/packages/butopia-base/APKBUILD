@@ -1,0 +1,32 @@
+# Maintainer: Butopia Contributors <maintainers@butopia.invalid>
+pkgname=butopia-base
+pkgver=0.1.0
+pkgrel=0
+pkgdesc="Core commands, defaults, and boot readiness service for Butopia"
+url="https://github.com/culpen90/Butopia"
+arch="noarch"
+license="MIT"
+depends="openrc"
+options="!check"
+source="
+	LICENSE
+	README
+	butopia
+	butopia-profile.sh
+	butopia-ready.initd
+	"
+
+package() {
+	install -Dm0755 "$srcdir/butopia" "$pkgdir/usr/bin/butopia"
+	install -Dm0644 "$srcdir/butopia-profile.sh" "$pkgdir/etc/profile.d/10-butopia.sh"
+	install -Dm0755 "$srcdir/butopia-ready.initd" "$pkgdir/etc/init.d/butopia-ready"
+	install -Dm0644 "$srcdir/README" "$pkgdir/usr/share/doc/butopia/README"
+	install -Dm0644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/butopia-base/LICENSE"
+}
+
+sha512sums="
+11d5a922d797604d8504e3fcb46d47ccc8a0a7595fc246548947c71bb6f86eaebd1b82eb6f7c4cb8dc1db4272b8f9e0339d67c6ea0c4cc2c2ce19b0bff1d1b85  LICENSE
+e7f1b4b674c4efa975b3e066abc6fc0c315586f195b55b4c59ef1ba20c7843dcd59f487e309dd5a0523a009004b84aa5a723302a6a812775b27b0d1ff7fa5fed  README
+4802f16108ed3ce53ff02ca9d7cbd0d3c52e8c07b90917d64c3977906cd0de0416d806c00f55ddbfcc21ac00697083e4db50b8499033e511985e289409afb22b  butopia
+440218c7d516364185aea9fb75ba56baf493335b6ebbc47377e7499a5ff786365c1b232c0f850220afc7b5741398283dd103f4ff7f819fa386c3f17b0aebc453  butopia-profile.sh
+e218ccda561501055f5c1b5e77d1ff5ee514ce745b2bf13b76e75311f295d1a4aba30a189ad9b04d22f05f89aec7b05c0fda7622daef795eaf21079fff32e81b  butopia-ready.initd"

@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+
+description="announce that Butopia reached its usable live environment"
+
+depend() {
+	need localmount
+	after networking
+}
+
+start() {
+	ebegin "Marking Butopia ready"
+	version=$(cat /etc/butopia-release 2>/dev/null || printf unknown)
+	message="BUTOPIA_BOOT_OK version=$version arch=$(uname -m)"
+	printf '\n%s\n' "$message" >/dev/console 2>/dev/null || true
+	if test -w /dev/ttyS0; then
+		printf '\n%s\n' "$message" >/dev/ttyS0 2>/dev/null || true
+	fi
+	eend 0
+}

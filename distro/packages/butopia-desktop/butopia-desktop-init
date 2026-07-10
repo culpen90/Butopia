@@ -1,0 +1,26 @@
+#!/bin/sh
+
+wallpaper=/usr/share/backgrounds/butopia/butopia-genesis.png
+
+i=0
+while ! xfconf-query -c xfce4-desktop -l >/dev/null 2>&1; do
+	i=$((i + 1))
+	test "$i" -lt 20 || exit 0
+	sleep 1
+done
+
+properties=$(xfconf-query -c xfce4-desktop -l 2>/dev/null \
+	| grep '/last-image$' || true)
+if test -n "$properties"; then
+	printf '%s\n' "$properties" | while IFS= read -r property; do
+		xfconf-query -c xfce4-desktop -p "$property" -s "$wallpaper" || true
+	done
+else
+	xfconf-query -c xfce4-desktop \
+		-p /backdrop/screen0/monitorVirtual-1/workspace0/last-image \
+		-n -t string -s "$wallpaper" || true
+fi
+
+xfconf-query -c xsettings -p /Net/ThemeName -s adw-gtk3-dark || true
+xfconf-query -c xsettings -p /Net/IconThemeName -s Adwaita-Xfce || true
+xfconf-query -c xfwm4 -p /general/use_compositing -n -t bool -s false || true

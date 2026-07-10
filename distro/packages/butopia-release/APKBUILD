@@ -1,0 +1,40 @@
+# Maintainer: Butopia Contributors <maintainers@butopia.invalid>
+pkgname=butopia-release
+pkgver=0.1.0
+pkgrel=0
+pkgdesc="Butopia Linux release identity and Alpine compatibility data"
+url="https://github.com/culpen90/Butopia"
+arch="noarch"
+license="MIT"
+depends="alpine-keys"
+provides="alpine-release=3.24.1-r0"
+provider_priority=100
+replaces="alpine-release alpine-baselayout"
+replaces_priority=100
+options="!check"
+source="
+	alpine-release
+	butopia-release
+	issue
+	motd
+	os-release
+	secfixes-alpine
+	"
+
+package() {
+	install -Dm0644 "$srcdir/alpine-release" "$pkgdir/etc/alpine-release"
+	install -Dm0644 "$srcdir/butopia-release" "$pkgdir/etc/butopia-release"
+	install -Dm0644 "$srcdir/issue" "$pkgdir/etc/issue"
+	install -Dm0644 "$srcdir/motd" "$pkgdir/etc/motd"
+	install -Dm0644 "$srcdir/os-release" "$pkgdir/usr/lib/os-release"
+	install -Dm0644 "$srcdir/secfixes-alpine" "$pkgdir/etc/secfixes.d/alpine"
+	ln -s ../usr/lib/os-release "$pkgdir/etc/os-release"
+}
+
+sha512sums="
+29c6d5eeb750e06b399a945727330e0ca28c3edb802a252a79533eb76cf03efc8ca90118c0bd83b530b7e4887cb5521908f978d286d2050c8488affe4538fc3b  alpine-release
+e1563be2364e5262fb4a89b312353af6a51b203d2e19438eb6bd01971aa859c4bda9f8a9fd62261f59e66956c1e86283db97e0f14f48791846677443e75b628c  butopia-release
+2f564d40c4a94aca085beeeafd8bc0f7bbba8009f68eeacbf36d52583b202b512cbcb8bf1fc86f5a6c22175457f18c1b0e40f8cd2ecff061dc9161a78a50831f  issue
+86615fa79b411f8bf7ae8258afda936245d58968769ed43aaad407f9edbf79173bd698664eb1ff8ee2acd563c2b476d2e12893082e1f3264a7cb991547235603  motd
+3fc7d4916742cb74a073d54d85d0f0280ea8417f0ce053c4ea542bea65ac81d8be034662d38bd8defbbc58700e8d7732c00dbab9b227cc2d92d8da1fa829bc64  os-release
+13f3418d837994abb9cf89abebf043b6abc1a174a01936f401396c4e93c5211763df1fc8645649d7cdc8fb249bacd43b304679195474a993635106f599b6277d  secfixes-alpine"

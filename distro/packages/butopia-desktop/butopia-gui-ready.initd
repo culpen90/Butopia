@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+
+description="verify that the Butopia graphical desktop session started"
+
+depend() {
+	need lightdm
+	after dbus elogind
+}
+
+start() {
+	ebegin "Waiting for the Butopia desktop"
+	count=0
+	while ! pidof xfce4-session >/dev/null 2>&1; do
+		count=$((count + 1))
+		if test "$count" -ge 45; then
+			eend 1 "Xfce session did not become ready"
+			return 1
+		fi
+		sleep 1
+	done
+
+	message="BUTOPIA_GUI_READY display_manager=lightdm desktop=xfce"
+	printf '\n%s\n' "$message" >/dev/console 2>/dev/null || true
+	if test -w /dev/ttyS0; then
+		printf '\n%s\n' "$message" >/dev/ttyS0 2>/dev/null || true
+	fi
+	eend 0
+}
